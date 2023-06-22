@@ -58,13 +58,12 @@ const precioPorMedida = (tipo) => {
 
     let tamanio = prompt("ingrese un tamaño de mesa");
 
-    while (seguir2, tipo == "eucalipto") {
+    while (tipo == "eucalipto") {
 
         if (tamanio == "chica") {
 
             console.log("El valor de esta mesa es de $35000")
 
-            seguir2 = false;
 
             break;
 
@@ -72,7 +71,6 @@ const precioPorMedida = (tipo) => {
 
             console.log("El valor de esta mesa es de $85000");
 
-            seguir2 = false;
 
             break;
 
@@ -82,6 +80,7 @@ const precioPorMedida = (tipo) => {
 
             console.log("El valor de esta mesa es de $170000");
 
+  
 
             break;
 
@@ -89,8 +88,6 @@ const precioPorMedida = (tipo) => {
 
             console.log("coloque un tamaño valido");
 
-
-            break;
 
         }
 
@@ -102,21 +99,17 @@ const precioPorMedida1 = (tipo) => {
 
     let tamanio = prompt("ingrese un tamaño de mesa");
 
-    while (seguir2, tipo == "pino") {
+    while (tipo == "pino") {
 
         if (tamanio == "chica") {
 
             console.log("El valor de esta mesa es de $15000")
-
-            seguir2 = false;
 
             break;
 
         } else if (tamanio == "mediana") {
 
             console.log("El valor de esta mesa es de $50000");
-
-            seguir2 = false;
 
             break;
 
@@ -126,13 +119,11 @@ const precioPorMedida1 = (tipo) => {
 
             console.log("El valor de esta mesa es de $110000");
 
-
             break;
 
         } else {
 
             console.log("coloque un tamaño valido");
-
 
             break;
 
@@ -146,21 +137,17 @@ const precioPorMedida2 = (tipo) => {
 
     let tamanio = prompt("ingrese un tamaño de mesa");
 
-    while (seguir2, tipo == "saligna") {
+    while (tipo == "saligna") {
 
         if (tamanio == "chica") {
 
             console.log("El valor de esta mesa es de $7000")
-
-            seguir2 = false;
 
             break;
 
         } else if (tamanio == "mediana") {
 
             console.log("El valor de esta mesa es de $30000");
-
-            seguir2 = false;
 
             break;
 
@@ -170,13 +157,11 @@ const precioPorMedida2 = (tipo) => {
 
             console.log("El valor de esta mesa es de $70000");
 
-
             break;
 
         } else {
 
             console.log("coloque un tamaño valido");
-
 
             break;
 
@@ -185,7 +170,5 @@ const precioPorMedida2 = (tipo) => {
     }
 
 }
-
- 
 
 madera();
