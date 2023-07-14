@@ -5,7 +5,6 @@ const calcularPrecioConIva = (precio) => {
   return precio + precio * 0.21;
 };
 
-// Array de objetos que simula el carrito de compras
 const carrito = [];
 
 const productos = [
@@ -56,48 +55,111 @@ const productos = [
   },
 ];
 
-const madera = () => {
-  let seguir = true;
+const mostrarCarrito = () => {
+  const carritoElement = document.getElementById("carrito");
+  carritoElement.innerHTML = ""; // Limpiar el contenido anterior del carrito
 
-  while (seguir) {
-    let opcion = prompt(
-      "Seleccione una opción:\n1. Agregar un producto al carrito\n2. Ver el carrito de compras\n3. Borrar un producto del carrito\n4. Pagar total\n\nIngrese el número de la opción deseada:"
-    );
+  if (carrito.length === 0) {
+    carritoElement.innerText = "El carrito de compras está vacío.";
+  } else {
+    let total = 0;
 
-    switch (opcion) {
-      case "1":
-        agregarProducto();
-        break;
-      case "2":
-        verCarrito();
-        break;
-      case "3":
-        borrarProducto();
-        break;
-      case "4":
-        marcarPagado();
-        break;
-      default:
-        alert("Opción inválida. Por favor, seleccione una opción válida.");
-    }
+    carrito.forEach((producto, index) => {
+      const productoElement = document.createElement("div");
+      productoElement.classList.add("producto");
+
+      const tipoElement = document.createElement("p");
+      tipoElement.innerText = `Tipo: ${producto.tipo}`;
+
+      const tamanioElement = document.createElement("p");
+      tamanioElement.innerText = `Tamaño: ${producto.tamanio}`;
+
+      const precioElement = document.createElement("p");
+      precioElement.innerText = `Precio: ${formatNumber(producto.precio)}`;
+
+      total += producto.precio;
+
+      productoElement.appendChild(tipoElement);
+      productoElement.appendChild(tamanioElement);
+      productoElement.appendChild(precioElement);
+
+      carritoElement.appendChild(productoElement);
+    });
+
+    const totalElement = document.createElement("p");
+    totalElement.innerText = `Total: ${formatNumber(total)}`;
+
+    carritoElement.appendChild(totalElement);
   }
 };
 
-const verCarrito = () => {
-  if (carrito.length === 0) {
-    alert("El carrito de compras está vacío.");
+const agregarProducto = () => {
+  const tipoInput = document.getElementById("tipo-input");
+  const tamanioInput = document.getElementById("tamanio-input");
+  const mensajeElement = document.getElementById("mensaje");
+
+  const tipo = tipoInput.value;
+  const tamanio = tamanioInput.value;
+
+  if (tiposMadera.includes(tipo) && tamaniosMesa.includes(tamanio)) {
+    const producto = productos.find((p) => p.tipo === tipo && p.tamanio === tamanio);
+
+    if (producto) {
+      const precio = producto.precio;
+      const precioConIva = calcularPrecioConIva(precio);
+
+      carrito.push({
+        tipo: producto.tipo,
+        tamanio: producto.tamanio,
+        precio: precioConIva,
+      });
+
+      mensajeElement.innerText = `La madera de ${tipo} en tamaño ${tamanio} se ha agregado al carrito.`;
+
+      tipoInput.value = "";
+      tamanioInput.value = "";
+
+      mostrarCarrito();
+    } else {
+      mensajeElement.innerText = "No se encontró el producto especificado en la base de datos.";
+    }
   } else {
-    let mensaje = "Contenido del carrito de compras:\n\n";
+    mensajeElement.innerText = "Ingrese un tipo de madera y tamaño válidos.";
+  }
+};
+
+const borrarProducto = (index) => {
+  if (index >= 0 && index < carrito.length) {
+    const productoBorrado = carrito.splice(index, 1);
+    mostrarCarrito();
+    const mensajeElement = document.getElementById("mensaje");
+    mensajeElement.innerText = `El producto ${productoBorrado[0].tipo} - ${productoBorrado[0].tamanio} ha sido eliminado del carrito.`;
+  } else {
+    const mensajeElement = document.getElementById("mensaje");
+    mensajeElement.innerText = "Opción inválida. Por favor, seleccione un número de producto válido.";
+  }
+};
+
+const borrarCarrito = () => {
+  carrito.length = 0;
+  mostrarCarrito();
+  const mensajeElement = document.getElementById("mensaje");
+  mensajeElement.innerText = "El carrito ha sido borrado.";
+};
+
+const marcarPagado = () => {
+  if (carrito.length === 0) {
+    const mensajeElement = document.getElementById("mensaje");
+    mensajeElement.innerText = "El carrito de compras está vacío.";
+  } else {
     let total = 0;
-    carrito.forEach((producto, index) => {
-      mensaje += `Producto ${index + 1}:\n`;
-      mensaje += `Tipo: ${producto.tipo}\n`;
-      mensaje += `Tamaño: ${producto.tamanio}\n`;
-      mensaje += `Precio: $${formatNumber(producto.precio)}\n\n`;
+    carrito.forEach((producto) => {
       total += producto.precio;
     });
-    mensaje += `Total: $${formatNumber(total)}`;
-    alert(mensaje);
+    const mensajeElement = document.getElementById("mensaje");
+    mensajeElement.innerText = `El importe total de ${formatNumber(total)} ha sido pagado.`;
+    carrito.length = 0; // Vaciar el carrito
+    mostrarCarrito();
   }
 };
 
@@ -105,75 +167,21 @@ const formatNumber = (number) => {
   return number.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
 };
 
-const agregarProducto = () => {
-  let tipo = prompt(`¿Qué madera busca entre las siguientes? ${tiposMadera.join(", ")}`);
+const agregarProductoBtn = document.getElementById("agregar-producto-btn");
+agregarProductoBtn.addEventListener("click", agregarProducto);
 
-  if (tiposMadera.includes(tipo)) {
-    let tamanio = "";
-
-    while (!tamanio) {
-      tamanio = prompt(`Ingrese un tamaño de mesa entre ${tamaniosMesa.join(", ")}`);
-
-      if (tamaniosMesa.includes(tamanio)) {
-        const producto = productos.find((p) => p.tipo === tipo && p.tamanio === tamanio);
-
-        if (producto) {
-          const precio = producto.precio;
-          const precioConIva = calcularPrecioConIva(precio);
-
-          // Agregar el producto al carrito de compras
-          carrito.push({
-            tipo: producto.tipo,
-            tamanio: producto.tamanio,
-            precio: precioConIva,
-          });
-
-          alert(`La madera de ${tipo} en tamaño ${tamanio} se ha agregado al carrito.`);
-        } else {
-          alert("No se encontró el producto especificado en la base de datos.");
-        }
-      } else {
-        alert("Ingrese un tamaño válido");
-        tamanio = "";
-      }
-    }
-  } else {
-    alert("Ingrese un tipo de madera válido");
+const carritoElement = document.getElementById("carrito");
+carritoElement.addEventListener("click", (event) => {
+  if (event.target.classList.contains("borrar-producto")) {
+    const index = parseInt(event.target.dataset.index);
+    borrarProducto(index);
   }
-};
+});
 
-const borrarProducto = () => {
-  if (carrito.length === 0) {
-    alert("El carrito de compras está vacío.");
-  } else {
-    let mensaje = "Seleccione el número del producto que desea borrar:\n\n";
-    carrito.forEach((producto, index) => {
-      mensaje += `${index + 1}. ${producto.tipo} - ${producto.tamanio} - ${formatNumber(producto.precio)}\n`;
-    });
+const pagarBtn = document.getElementById("pagar-btn");
+pagarBtn.addEventListener("click", marcarPagado);
 
-    const opcion = prompt(mensaje);
-    const index = parseInt(opcion) - 1;
+const borrarCarritoBtn = document.getElementById("borrar-carrito-btn");
+borrarCarritoBtn.addEventListener("click", borrarCarrito);
 
-    if (index >= 0 && index < carrito.length) {
-      const productoBorrado = carrito.splice(index, 1);
-      alert(`El producto ${productoBorrado[0].tipo} - ${productoBorrado[0].tamanio} ha sido eliminado del carrito.`);
-    } else {
-      alert("Opción inválida. Por favor, seleccione un número de producto válido.");
-    }
-  }
-};
-
-const marcarPagado = () => {
-  if (carrito.length === 0) {
-    alert("El carrito de compras está vacío.");
-  } else {
-    let total = 0;
-    carrito.forEach((producto) => {
-      total += producto.precio;
-    });
-    alert(`El importe total de ${formatNumber(total)} ha sido pagado.`);
-    carrito.length = 0; // Vaciar el carrito
-  }
-};
-
-madera();
+mostrarCarrito();
