@@ -6,58 +6,75 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f1f1f1;
-}
+  }
   
-.container {
+  .container {
     max-width: 400px;
     padding: 20px;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+  }
   
-.container h2 {
+  .container h2 {
     margin-top: 0;
-}
+  }
   
-.container div {
+  .container div {
     margin-bottom: 10px;
-}
+  }
   
-.container label {
+  .container label {
     display: block;
     margin-bottom: 5px;
-}
+  }
   
-.container select,
-.container button {
+  .container select,
+  .container button {
     display: block;
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 3px;
     background-color: #fff;
-}
+  }
   
-.button-group {
+  .button-group {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-top: 10px;
-}
+  }
   
-.button-group button {
+  .button-group button {
     flex-grow: 1;
     margin-right: 5px;
-}
+  }
   
-.container button {
+  .container button {
     color: #fff;
     background-color: #007bff;
     border: none;
     cursor: pointer;
-}
+  }
   
-.container button.btn-danger {
+  .container button.btn-danger {
     background-color: #dc3545;
-}
+  }
+  
+  .producto img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  /* Estilos para ocultar el formulario de pago por defecto */
+  #formulario-pago {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+  }
+  

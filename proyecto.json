@@ -1,0 +1,60 @@
+[
+    {
+      "tipo": "eucalipto",
+      "tamanio": "chica",
+      "precio": 35000
+      
+    },
+    {
+      "tipo": "pino",
+      "tamanio": "chica",
+      "precio": 15000
+    
+    },
+    {
+      "tipo": "saligna",
+      "tamanio": "chica",
+      "precio": 7000
+      
+    },
+    {
+      "tipo": "eucalipto",
+      "tamanio": "mediana",
+      "precio": 85000
+    
+    },
+    {
+      "tipo": "pino",
+      "tamanio": "mediana",
+      "precio": 50000
+      
+    },
+    {
+      "tipo": "saligna",
+      "tamanio": "mediana",
+      "precio": 30000
+      
+    },
+    {
+      "tipo": "eucalipto",
+      "tamanio": "grande",
+      "precio": 170000
+      
+    },
+    {
+      "tipo": "pino",
+      "tamanio": "grande",
+      "precio": 110000
+      
+    },
+    {
+      "tipo": "saligna",
+      "tamanio": "grande",
+      "precio": 70000
+      
+    }
+  ]
+  
+  
+  
+  

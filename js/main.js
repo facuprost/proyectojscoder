@@ -1,9 +1,7 @@
 const tiposMadera = ["eucalipto", "pino", "saligna"];
 const tamaniosMesa = ["chica", "mediana", "grande"];
 
-const calcularPrecioConIva = (precio) => {
-  return precio + precio * 0.21;
-};
+const calcularPrecioConIva = (precio) => precio + precio * 0.21;
 
 let carrito = [];
 
@@ -56,53 +54,113 @@ const productos = [
 ];
 
 const mostrarCarrito = () => {
-  const carritoElement = document.getElementById("carrito");
-  carritoElement.innerHTML = ""; // Limpiar el contenido anterior del carrito
+  const contenedorCarrito = document.getElementById("carrito");
+  contenedorCarrito.innerHTML = "";
 
   if (carrito.length === 0) {
-    carritoElement.innerText = "El carrito de compras está vacío.";
+    contenedorCarrito.innerText = "El carrito de compras está vacío.";
   } else {
     let total = 0;
 
-    carrito.forEach((producto, index) => {
-      const productoElement = document.createElement("div");
-      productoElement.classList.add("producto");
+    carrito.forEach((producto, indice) => {
+      const elementoProducto = document.createElement("div");
+      elementoProducto.classList.add("producto");
 
-      const tipoElement = document.createElement("p");
-      tipoElement.innerText = `Tipo: ${producto.tipo}`;
+      const elementoTipo = document.createElement("p");
+      elementoTipo.innerText = `Tipo: ${producto.tipo}`;
 
-      const tamanioElement = document.createElement("p");
-      tamanioElement.innerText = `Tamaño: ${producto.tamanio}`;
+      const elementoTamanio = document.createElement("p");
+      elementoTamanio.innerText = `Tamaño: ${producto.tamanio}`;
 
-      const precioElement = document.createElement("p");
-      precioElement.innerText = `Precio: ${formatNumber(producto.precio)}`;
+      const elementoPrecio = document.createElement("p");
+      elementoPrecio.innerText = `Precio: ${formatearNumero(producto.precio)}`;
+
+      const botonEliminar = document.createElement("button");
+      botonEliminar.innerText = "Eliminar";
+      botonEliminar.classList.add("btn", "btn-danger", "eliminar-producto-btn");
+      botonEliminar.addEventListener("click", () => {
+        mostrarAlertaEliminar(indice);
+      });
+
+      elementoProducto.appendChild(elementoTipo);
+      elementoProducto.appendChild(elementoTamanio);
+      elementoProducto.appendChild(elementoPrecio);
+      elementoProducto.appendChild(botonEliminar);
+
+      contenedorCarrito.appendChild(elementoProducto);
 
       total += producto.precio;
-
-      productoElement.appendChild(tipoElement);
-      productoElement.appendChild(tamanioElement);
-      productoElement.appendChild(precioElement);
-
-      carritoElement.appendChild(productoElement);
     });
 
-    const totalElement = document.createElement("p");
-    totalElement.innerText = `Total: ${formatNumber(total)}`;
+    const elementoTotal = document.createElement("p");
+    elementoTotal.innerText = `Total: ${formatearNumero(total)}`;
 
-    carritoElement.appendChild(totalElement);
+    contenedorCarrito.appendChild(elementoTotal);
   }
 };
+
+const mostrarAlertaEliminar = (indice) => {
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "El producto será eliminado del carrito.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+  }).then((resultado) => {
+    if (resultado.isConfirmed) {
+      eliminarProducto(indice);
+      Swal.fire("¡Eliminado!", "El producto ha sido eliminado del carrito.", "success");
+    }
+  });
+};
+
+const realizarPago = () => {
+  if (carrito.length === 0) {
+    const mensajeElemento = document.getElementById("mensaje");
+    mensajeElemento.innerText = "El carrito de compras está vacío.";
+  } else {
+    const total = carrito.reduce((acumulador, producto) => acumulador + producto.precio, 0);
+    const descripcion = carrito.map((producto) => `${producto.tipo} - ${producto.tamanio}`).join(", ");
+
+    Swal.fire({
+      title: "Finalizar compra",
+      html: `Total a pagar: ${formatearNumero(total)}<br>Productos: ${descripcion}`,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Pagar",
+      cancelButtonText: "Cancelar",
+    }).then((resultado) => {
+      if (resultado.isConfirmed) {
+        realizarPagoConFetch(total)
+          .then(() => {
+            Swal.fire("¡Compra exitosa!", "El pago ha sido procesado correctamente.", "success").then(() => {
+              carrito = []; // Reiniciar el carrito vaciándolo
+              guardarCarritoEnLocalStorage();
+              mostrarCarrito();
+            });
+          })
+          .catch((error) => {
+            Swal.fire("Error", `Hubo un problema con el pago: ${error.message}`, "error");
+          });
+      }
+    });
+  }
+};
+
 
 const agregarProducto = () => {
   const tipoInput = document.getElementById("tipo-input");
   const tamanioInput = document.getElementById("tamanio-input");
-  const mensajeElement = document.getElementById("mensaje");
+  const mensajeElemento = document.getElementById("mensaje");
 
   const tipo = tipoInput.value;
   const tamanio = tamanioInput.value;
 
   if (tiposMadera.includes(tipo) && tamaniosMesa.includes(tamanio)) {
-    const producto = productos.find((p) => p.tipo === tipo && p.tamanio === tamanio);
+    const producto = productos.find((prod) => prod.tipo === tipo && prod.tamanio === tamanio);
 
     if (producto) {
       const precio = producto.precio;
@@ -114,31 +172,31 @@ const agregarProducto = () => {
         precio: precioConIva,
       });
 
-      mensajeElement.innerText = `La madera de ${tipo} en tamaño ${tamanio} se ha agregado al carrito.`;
+      mensajeElemento.innerText = `La madera de ${tipo} en tamaño ${tamanio} se ha agregado al carrito.`;
 
       tipoInput.value = "";
       tamanioInput.value = "";
 
       guardarCarritoEnLocalStorage();
-      mostrarCarrito(); // Mostrar el carrito actualizado
+      mostrarCarrito();
     } else {
-      mensajeElement.innerText = "No se encontró el producto especificado en la base de datos.";
+      mensajeElemento.innerText = "No se encontró el producto especificado en la base de datos.";
     }
   } else {
-    mensajeElement.innerText = "Ingrese un tipo de madera y tamaño válidos.";
+    mensajeElemento.innerText = "Ingrese un tipo de madera y tamaño válidos.";
   }
 };
 
-const borrarProducto = (index) => {
-  if (index >= 0 && index < carrito.length) {
-    const productoBorrado = carrito.splice(index, 1);
+const eliminarProducto = (indice) => {
+  if (indice >= 0 && indice < carrito.length) {
+    carrito.splice(indice, 1);
     guardarCarritoEnLocalStorage();
     mostrarCarrito();
-    const mensajeElement = document.getElementById("mensaje");
-    mensajeElement.innerText = `El producto ${productoBorrado[0].tipo} - ${productoBorrado[0].tamanio} ha sido eliminado del carrito.`;
+    const mensajeElemento = document.getElementById("mensaje");
+    mensajeElemento.innerText = "El producto ha sido eliminado del carrito.";
   } else {
-    const mensajeElement = document.getElementById("mensaje");
-    mensajeElement.innerText = "Opción inválida. Por favor, seleccione un número de producto válido.";
+    const mensajeElemento = document.getElementById("mensaje");
+    mensajeElemento.innerText = "Opción inválida. Por favor, seleccione un número de producto válido.";
   }
 };
 
@@ -146,29 +204,12 @@ const borrarCarrito = () => {
   carrito = [];
   guardarCarritoEnLocalStorage();
   mostrarCarrito();
-  const mensajeElement = document.getElementById("mensaje");
-  mensajeElement.innerText = "El carrito ha sido borrado.";
+  const mensajeElemento = document.getElementById("mensaje");
+  mensajeElemento.innerText = "El carrito ha sido borrado.";
 };
 
-const marcarPagado = () => {
-  if (carrito.length === 0) {
-    const mensajeElement = document.getElementById("mensaje");
-    mensajeElement.innerText = "El carrito de compras está vacío.";
-  } else {
-    let total = 0;
-    carrito.forEach((producto) => {
-      total += producto.precio;
-    });
-    const mensajeElement = document.getElementById("mensaje");
-    mensajeElement.innerText = `El importe total de ${formatNumber(total)} ha sido pagado.`;
-    carrito = []; // Vaciar el carrito
-    guardarCarritoEnLocalStorage();
-    mostrarCarrito();
-  }
-};
-
-const formatNumber = (number) => {
-  return number.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
+const formatearNumero = (numero) => {
+  return numero.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
 };
 
 const guardarCarritoEnLocalStorage = () => {
@@ -185,14 +226,40 @@ const recuperarCarritoDeLocalStorage = () => {
 recuperarCarritoDeLocalStorage();
 mostrarCarrito();
 
-const agregarBtn = document.getElementById("agregar-producto-btn");
-agregarBtn.addEventListener("click", agregarProducto);
+const botonAgregar = document.getElementById("agregar-producto-btn");
+botonAgregar.addEventListener("click", agregarProducto);
 
-const borrarCarritoBtn = document.getElementById("borrar-carrito-btn");
-borrarCarritoBtn.addEventListener("click", borrarCarrito);
+const botonBorrarCarrito = document.getElementById("borrar-carrito-btn");
+botonBorrarCarrito.addEventListener("click", borrarCarrito);
 
-const pagarBtn = document.getElementById("pagar-btn");
-pagarBtn.addEventListener("click", marcarPagado);
+const mostrarFormularioPago = () => {
+  const formularioPago = document.getElementById("formulario-pago");
+  formularioPago.style.display = "flex";
+};
+
+const ocultarFormularioPago = () => {
+  const formularioPago = document.getElementById("formulario-pago");
+  formularioPago.style.display = "none";
+};
+
+const mostrarOcultarFormularioPago = () => {
+  const formularioPago = document.getElementById("formulario-pago");
+  formularioPago.style.display = formularioPago.style.display === "none" ? "flex" : "none";
+};
+
+const botonFinalizarCompra = document.getElementById("pagar-btn");
+botonFinalizarCompra.addEventListener("click", () => {
+  mostrarOcultarFormularioPago();
+});
+
+
+
+
+
+
+
+
+
 
 
 
