@@ -2,56 +2,49 @@
     {
       "tipo": "eucalipto",
       "tamanio": "chica",
-      "precio": 35000,
-      "imagen": "images/eucalipto_chica.jpg"
+      "precio": 35000
+      
     },
     {
       "tipo": "pino",
       "tamanio": "chica",
-      "precio": 15000,
-      "imagen": "images/pino_chica.jpg"
+      "precio": 15000
+      
     },
     {
       "tipo": "saligna",
       "tamanio": "chica",
-      "precio": 7000,
-      "imagen": "images/saligna_chica.jpg"
+      "precio": 7000
     },
     {
       "tipo": "eucalipto",
       "tamanio": "mediana",
-      "precio": 85000,
-      "imagen": "images/eucalipto_mediana.jpg"
+      "precio": 85000
     },
     {
       "tipo": "pino",
       "tamanio": "mediana",
-      "precio": 50000,
-      "imagen": "images/pino_mediana.jpg"
+      "precio": 50000
     },
     {
       "tipo": "saligna",
       "tamanio": "mediana",
-      "precio": 30000,
-      "imagen": "images/saligna_mediana.jpg"
+      "precio": 30000
     },
     {
       "tipo": "eucalipto",
       "tamanio": "grande",
-      "precio": 170000,
-      "imagen": "images/eucalipto_grande.jpg"
+      "precio": 170000
     },
     {
       "tipo": "pino",
       "tamanio": "grande",
-      "precio": 110000,
-      "imagen": "images/pino_grande.jpg"
+      "precio": 110000
     },
     {
       "tipo": "saligna",
       "tamanio": "grande",
-      "precio": 70000,
-      "imagen": "images/saligna_grande.jpg"
+      "precio": 70000
     }
   ]
   
