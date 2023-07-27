@@ -68,7 +68,7 @@ body {
     margin-bottom: 10px;
   }
   
-  /* Estilos para ocultar el formulario de pago por defecto */
+ 
   #formulario-pago {
     display: none;
     flex-direction: column;

@@ -5,53 +5,50 @@ const calcularPrecioConIva = (precio) => precio + precio * 0.21;
 
 let carrito = [];
 
-const productos = [
-  {
-    tipo: "eucalipto",
-    tamanio: "chica",
-    precio: 35000,
-  },
-  {
-    tipo: "pino",
-    tamanio: "chica",
-    precio: 15000,
-  },
-  {
-    tipo: "saligna",
-    tamanio: "chica",
-    precio: 7000,
-  },
-  {
-    tipo: "eucalipto",
-    tamanio: "mediana",
-    precio: 85000,
-  },
-  {
-    tipo: "pino",
-    tamanio: "mediana",
-    precio: 50000,
-  },
-  {
-    tipo: "saligna",
-    tamanio: "mediana",
-    precio: 30000,
-  },
-  {
-    tipo: "eucalipto",
-    tamanio: "grande",
-    precio: 170000,
-  },
-  {
-    tipo: "pino",
-    tamanio: "grande",
-    precio: 110000,
-  },
-  {
-    tipo: "saligna",
-    tamanio: "grande",
-    precio: 70000,
-  },
-];
+const productos = [];
+
+  function cargarProductos() {
+    fetch('proyecto.json') 
+      .then(response => response.json()) 
+      .then(data => {
+        
+        productos.push(...data);
+      })
+      .catch(error => console.error('Error al cargar los productos:', error));
+  }
+
+  function mostrarProductos(productos) {
+    const listaProductos = document.getElementById('productos-lista');
+  
+    productos.forEach(producto => {
+      const listItem = document.createElement('li');
+  
+     
+      const imagenProducto = document.createElement('img');
+      imagenProducto.src = producto.imagen;
+      imagenProducto.alt = `${producto.tipo} - ${producto.tamanio}`;
+      imagenProducto.width = 100; 
+  
+      
+      const elementoTipo = document.createElement('p');
+      elementoTipo.innerText = `Tipo: ${producto.tipo}`;
+  
+      const elementoTamanio = document.createElement('p');
+      elementoTamanio.innerText = `Tamaño: ${producto.tamanio}`;
+  
+      const elementoPrecio = document.createElement('p');
+      elementoPrecio.innerText = `Precio: ${formatearNumero(producto.precio)}`;
+  
+      
+      listItem.appendChild(imagenProducto);
+      listItem.appendChild(elementoTipo);
+      listItem.appendChild(elementoTamanio);
+      listItem.appendChild(elementoPrecio);
+  
+      
+      listaProductos.appendChild(listItem);
+    });
+  }
 
 const mostrarCarrito = () => {
   const contenedorCarrito = document.getElementById("carrito");
@@ -137,7 +134,7 @@ const realizarPago = () => {
         realizarPagoConFetch(total)
           .then(() => {
             Swal.fire("¡Compra exitosa!", "El pago ha sido procesado correctamente.", "success").then(() => {
-              carrito = []; // Reiniciar el carrito vaciándolo
+              carrito = []; 
               guardarCarritoEnLocalStorage();
               mostrarCarrito();
             });
@@ -223,6 +220,7 @@ const recuperarCarritoDeLocalStorage = () => {
   }
 };
 
+cargarProductos();
 recuperarCarritoDeLocalStorage();
 mostrarCarrito();
 
